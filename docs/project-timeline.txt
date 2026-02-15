@@ -1,4 +1,28 @@
 ============================================================
+====================      OVERVIEW      ====================
+============================================================
+1st Checkpoint, 13 Feb.:
+    Problem Definition, Data Gathering, KPIs
+
+2nd Checkpoint, 20 Feb.:  
+    EDA, Feature Selection, and Feature Engineering
+
+3rd Checkpoint, due 27 Feb.: 
+    Model Evaluation Plan
+
+4th Checkpoint, 6 Mar.:
+    Modeling
+
+5th Checkpoint, 13 Mar.: 
+    Presentation and Communication
+
+FINAL project due 20 Mar.
+============================================================
+
+
+
+
+============================================================
 Checkpoint 1 Guide: Problem Definition, Data Gathering, KPIs
 ============================================================
 Due: 13 Feb. 2025
@@ -110,30 +134,21 @@ Due: 20 Feb. 2025
 
 Exploratory Data Analysis (EDA)
     • Understand distributions
-
     • Inspect univariate distributions (histograms, KDEs, boxplots).
-
     • Check for missing data
-
     • Quantify missingness, visualize patterns.
     • Tools:
         ◦ pandas.isna
         ◦ missingno (matrix, heatmap, dendrogram visualizations)
-
     • Relationships between variables
-
     • Scatterplots, correlation heatmaps, group summaries.
-
     • Outlier detection
-
     • Identify points that may distort modeling.
     • Tools:
         ◦ scipy.stats.zscore
         ◦ sklearn.ensemble.IsolationForest
         ◦ Boxplots via seaborn.boxplot
-
     • Time-series and lag structure
-
     • Create exploratory lag features in a notebook only to inspect autocorrelation, partial autocorrelation, or lag-target scatterplots.
     • Tools:
         ◦ pandas.DataFrame.shift
@@ -141,33 +156,23 @@ Exploratory Data Analysis (EDA)
         ◦ statsmodels.graphics.tsaplots.plot_pacf
         ◦ Interactive plotting with plotly.express.line
 
-
 Feature Selection
     • Domain knowledge (primary filter)
 
     • Do not include variables just because they exist.
     • Keep features with a plausible, defensible connection to the target.
     • This step combats the curse of dimensionality: too many irrelevant predictors leads to overfitting.
-
     • Leakage check
-
     • Drop variables known only post-outcome or that encode the target directly.
-
     • Low-information features
-
     • Drop near-constant or high-missingness columns.
         ◦ Note: “Near constant” is not a fixed threshold — it’s contextual. Use domain knowledge to decide whether small variation is meaningful. For example, if request latency varies only from 2.3 ms to 2.4 ms, it’s implausible this explains differences in click-through rate; you should treat it as constant. But a drug dosage shift from 2.3 mg/kg to 2.4 mg/kg may have clinically significant effects and must not be discarded. The same numerical range can be irrelevant in one setting and critical in another.
-
     • Redundancy checks
-
     • Remove highly collinear features; keep one representative.
     • Tools: pandas.DataFrame.corr, VIF via statsmodels
-
     • Model-based diagnostics
-
     • Use feature importances as supporting evidence but not as the main decision tool.
     • Tools: SelectFromModel, tree-based models (RandomForest*, XGB*).
-
 
 Feature Engineering
     • Domain-driven transformations
@@ -177,14 +182,12 @@ Feature Engineering
     • Time features
         ◦ Extract lags, rolling statistics, seasonality components.
 
-
 Iteration Between EDA and Feature Work
     • Expect to loop
 
     • EDA, feature selection, and feature engineering are not one-time steps. They should inform each other in cycles.
 
     • Workflow
-
     1. Explore data distributions and relationships in EDA.
     2. Propose engineered features based on patterns or domain ideas.
     3. Test them quickly with simple models or diagnostics.
@@ -192,20 +195,15 @@ Iteration Between EDA and Feature Work
     5. Go back to EDA with new questions (e.g., “Why didn’t lag-7 help? Maybe seasonality is longer”).
 
     • Mindset
-
     • Don’t hoard features “just in case.” Keep the pipeline clean and only include features that survive scrutiny.
     • Each iteration should strengthen your understanding of the data, not just expand the feature set.
 
-
 Deliverables
     • Written / Conceptual
-
     • A data audit summary: key distributional facts, missingness, correlations.
     • A list of dropped features with justification (low information, leakage, redundancy, irrelevance).
     • A list of engineered features with rationale (domain knowledge, lags, interactions, transformations).
-
     • Code / Repo Artifacts
-
     • notebooks/eda.ipynb:
         ◦ Visualizations and descriptive stats.
         ◦ Missingness analysis.
