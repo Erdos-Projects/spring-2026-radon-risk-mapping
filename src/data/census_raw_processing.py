@@ -4,6 +4,64 @@ import numpy as np
 
 
 # ============================================
+# Feature name standardization
+# ============================================
+COLUMN_REMAP = {
+
+    # FSA
+    "FSA": "fsa",
+
+    # dwelling composition (compositional group: type)
+    "frac_single_detached": "hous_frac_type_single_detached",
+    "frac_highrise": "hous_frac_type_highrise",
+    "frac_other_attached": "hous_frac_type_other_attached",
+    "frac_movable": "hous_frac_type_movable",
+
+    # structure
+    "avg_rooms": "hous_avg_rooms",
+    "frac_major_repair": "hous_frac_major_repair",
+
+    # construction age (compositional group: age)
+    "frac_pre_1980": "hous_frac_age_pre_1980",
+    "frac_1981_2000": "hous_frac_age_1981_2000",
+    "frac_post_2001": "hous_frac_age_post_2001",
+
+    # housing value
+    "median_home_value": "hous_median_value",
+
+    # demographics
+    "pop_2016": "demogr_pop_2016",
+    "num_dwellings": "demogr_num_total_dwellings",
+    "occ_dwellings": "demogr_num_occ_dwellings",
+    "median_age": "demogr_median_age",
+    "avg_household_size": "demogr_avg_household_size",
+
+    # housing tenure (compositional group: tenure)
+    "frac_owned": "demogr_frac_tenure_owned",
+    "frac_rented": "demogr_frac_tenure_rented",
+    "frac_band": "demogr_frac_tenure_band",
+
+    # income
+    "frac_low_income": "socioeco_frac_low_income",
+    "med_income": "socioeco_median_income",
+    "frac_high_income": "socioeco_frac_high_income",
+    "frac_govt_transfers": "socioeco_frac_govt_transfers",
+
+    # labor
+    "unemployment_rate": "socioeco_frac_unemployment_rate",
+    "frac_non_laborer": "socioeco_frac_nonlaborer",
+
+    # education
+    "frac_bachelor_plus": "socioeco_frac_bachelor_plus",
+
+    # housing stress
+    "frac_overcrowded": "socioeco_frac_overcrowded",
+    "frac_unsuitable_housing": "socioeco_frac_unsuitable_housing",
+    "frac_housing_poor_owners": "socioeco_frac_housing_burden",
+}
+
+
+# ============================================
 # Helper fucntions
 # ============================================
 
@@ -126,10 +184,10 @@ def _build_dwelling_type_features(df_wide):
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_single_detached": single_detached / structural_total,
-        "pct_highrise": highrise / structural_total,
-        "pct_other_attached": other_attached / structural_total,
-        "pct_movable": movable / structural_total,
+        "frac_single_detached": single_detached / structural_total,
+        "frac_highrise": highrise / structural_total,
+        "frac_other_attached": other_attached / structural_total,
+        "frac_movable": movable / structural_total,
     })
 
 def _build_avg_rooms_feature(df_wide):
@@ -187,7 +245,7 @@ def _build_repair_status_feature(df_wide):
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_major_repair": major / total
+        "frac_major_repair": major / total
     })
 
 def _build_building_age_features(df_wide):
@@ -245,15 +303,15 @@ def _build_building_age_features(df_wide):
     construction_total = construction_total.replace(0, np.nan)
 
     # Aggregate bins
-    pct_pre_1980 = (pre_1960 + y1961_1980) / construction_total
-    pct_1981_2000 = (y1981_1990 + y1991_2000) / construction_total
-    pct_post_2001 = (y2001_2005 + y2006_2010 + y2011_2016) / construction_total
+    frac_pre_1980 = (pre_1960 + y1961_1980) / construction_total
+    frac_1981_2000 = (y1981_1990 + y1991_2000) / construction_total
+    frac_post_2001 = (y2001_2005 + y2006_2010 + y2011_2016) / construction_total
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_pre_1980": pct_pre_1980,
-        "pct_1981_2000": pct_1981_2000,
-        "pct_post_2001": pct_post_2001,
+        "frac_pre_1980": frac_pre_1980,
+        "frac_1981_2000": frac_1981_2000,
+        "frac_post_2001": frac_post_2001,
     })
 
 def _build_home_value_feature(df_wide):
@@ -319,9 +377,9 @@ def _build_tenure_features(df_wide):
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_owned": owner / total,
-        "pct_rented": renter / total,
-        "pct_band": band / total,
+        "frac_owned": owner / total,
+        "frac_rented": renter / total,
+        "frac_band": band / total,
     })
 
 def _build_income_features(df_wide):
@@ -335,7 +393,7 @@ def _build_income_features(df_wide):
         707  - Population with income >= $150,000
         690  - Government transfers (%)
 
-    pct_high_income is computed as:
+    frac_high_income is computed as:
         (count >=150k) / (count with total income)
     """
 
@@ -348,29 +406,29 @@ def _build_income_features(df_wide):
     }
 
     # Extract raw values
-    pct_low_income = pd.to_numeric(df_wide[MEMBER_IDS["pct_low_income"]], errors="coerce")
+    frac_low_income = pd.to_numeric(df_wide[MEMBER_IDS["pct_low_income"]], errors="coerce") / 100
     med_income = pd.to_numeric(df_wide[MEMBER_IDS["med_income"]], errors="coerce")
     with_income = pd.to_numeric(df_wide[MEMBER_IDS["with_income"]], errors="coerce")
     high_income_count = pd.to_numeric(df_wide[MEMBER_IDS["high_income_count"]], errors="coerce")
-    pct_govt_transfers = pd.to_numeric(df_wide[MEMBER_IDS["pct_govt_transfers"]], errors="coerce")
+    frac_govt_transfers = pd.to_numeric(df_wide[MEMBER_IDS["pct_govt_transfers"]], errors="coerce") / 100
 
     # Compute high income share safely
     denominator = with_income.mask(with_income == 0)
-    pct_high_income = (high_income_count / denominator) * 100
+    frac_high_income = (high_income_count / denominator) 
 
     # Sanity enforcement
-    pct_low_income = pct_low_income.mask((pct_low_income < 0) | (pct_low_income > 100))
-    pct_govt_transfers = pct_govt_transfers.mask((pct_govt_transfers < 0) | (pct_govt_transfers > 100))
+    frac_low_income = frac_low_income.mask((frac_low_income < 0) | (frac_low_income > 1))
+    frac_govt_transfers = frac_govt_transfers.mask((frac_govt_transfers < 0) | (frac_govt_transfers > 1))
 
     med_income = med_income.mask(med_income <= 0)
-    pct_high_income = pct_high_income.mask((pct_high_income < 0) | (pct_high_income > 100))
+    frac_high_income = frac_high_income.mask((frac_high_income < 0) | (frac_high_income > 1))
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_low_income": pct_low_income,
+        "frac_low_income": frac_low_income,
         "med_income": med_income,
-        "pct_high_income": pct_high_income,
-        "pct_govt_transfers": pct_govt_transfers,
+        "frac_high_income": frac_high_income,
+        "frac_govt_transfers": frac_govt_transfers,
     })
 
 def _build_labor_features(df_wide):
@@ -391,15 +449,15 @@ def _build_labor_features(df_wide):
         "not_in_labor_force": 1869,
     }
 
-    employment_rate = pd.to_numeric(
+    frac_employment_rate = pd.to_numeric(
         df_wide[MEMBER_IDS["employment_rate"]],
         errors="coerce"
-    )
+    ) / 100
 
-    unemployment_rate = pd.to_numeric(
+    frac_unemployment_rate = pd.to_numeric(
         df_wide[MEMBER_IDS["unemployment_rate"]],
         errors="coerce"
-    )
+    ) / 100
 
     total_15plus = pd.to_numeric(
         df_wide[MEMBER_IDS["total_15plus"]],
@@ -413,25 +471,25 @@ def _build_labor_features(df_wide):
 
     # Compute non-labor force percentage
     denominator = total_15plus.mask(total_15plus == 0)
-    pct_non_laborer = (not_in_labor_force / denominator) * 100
+    frac_non_laborer = (not_in_labor_force / denominator) 
 
     # Sanity enforcement
-    employment_rate = employment_rate.mask(
-        (employment_rate < 0) | (employment_rate > 100)
+    frac_employment_rate = frac_employment_rate.mask(
+        (frac_employment_rate < 0) | (frac_employment_rate > 1)
     )
 
-    unemployment_rate = unemployment_rate.mask(
-        (unemployment_rate < 0) | (unemployment_rate > 100)
+    frac_unemployment_rate = frac_unemployment_rate.mask(
+        (frac_unemployment_rate < 0) | (frac_unemployment_rate > 1)
     )
 
-    pct_non_laborer = pct_non_laborer.mask(
-        (pct_non_laborer < 0) | (pct_non_laborer > 100)
+    frac_non_laborer = frac_non_laborer.mask(
+        (frac_non_laborer < 0) | (frac_non_laborer > 1)
     )
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "unemployment_rate": unemployment_rate,
-        "pct_non_laborer": pct_non_laborer,
+        "unemployment_rate": frac_unemployment_rate,
+        "frac_non_laborer": frac_non_laborer,
     })
 
 def _build_education_features(df_wide):
@@ -439,7 +497,7 @@ def _build_education_features(df_wide):
     Build education-related features.
 
     Computes:
-        pct_bachelor_plus
+        frac_bachelor_plus
             = population aged 25–64 with bachelor's degree or higher
               divided by total population aged 25–64
 
@@ -465,16 +523,16 @@ def _build_education_features(df_wide):
 
     # Safe division
     denominator = total_25_64.mask(total_25_64 == 0)
-    pct_bachelor_plus = (bachelor_plus / denominator) * 100
+    frac_bachelor_plus = (bachelor_plus / denominator) 
 
     # Sanity enforcement
-    pct_bachelor_plus = pct_bachelor_plus.mask(
-        (pct_bachelor_plus < 0) | (pct_bachelor_plus > 100)
+    frac_bachelor_plus = frac_bachelor_plus.mask(
+        (frac_bachelor_plus < 0) | (frac_bachelor_plus > 1)
     )
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_bachelor_plus": pct_bachelor_plus,
+        "frac_bachelor_plus": frac_bachelor_plus,
     })
 
 def _build_overcrowding_feature(df_wide):
@@ -482,7 +540,7 @@ def _build_overcrowding_feature(df_wide):
     Build overcrowding feature.
 
     Computes:
-        pct_overcrowded_households
+        frac_overcrowded_households
             = households with >1 person per room
               divided by total households
 
@@ -508,16 +566,16 @@ def _build_overcrowding_feature(df_wide):
 
     # Safe division
     denominator = total_households.mask(total_households == 0)
-    pct_overcrowded = (overcrowded_households / denominator) * 100
+    frac_overcrowded = (overcrowded_households / denominator)
 
     # Sanity enforcement
-    pct_overcrowded = pct_overcrowded.mask(
-        (pct_overcrowded < 0) | (pct_overcrowded > 100)
+    frac_overcrowded = frac_overcrowded.mask(
+        (frac_overcrowded < 0) | (frac_overcrowded > 1)
     )
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_overcrowded": pct_overcrowded,
+        "frac_overcrowded": frac_overcrowded,
     })
 
 def _build_housing_suitability_feature(df_wide):
@@ -525,7 +583,7 @@ def _build_housing_suitability_feature(df_wide):
     Build housing suitability feature.
 
     Computes:
-        pct_unsuitable_housing
+        frac_unsuitable_housing
             = households classified as "Not suitable"
               divided by total households
 
@@ -551,16 +609,16 @@ def _build_housing_suitability_feature(df_wide):
 
     # Safe division
     denominator = total_households.mask(total_households == 0)
-    pct_unsuitable_housing = (not_suitable / denominator) * 100
+    frac_unsuitable_housing = (not_suitable / denominator)
 
     # Sanity enforcement
-    pct_unsuitable_housing = pct_unsuitable_housing.mask(
-        (pct_unsuitable_housing < 0) | (pct_unsuitable_housing > 100)
+    frac_unsuitable_housing = frac_unsuitable_housing.mask(
+        (frac_unsuitable_housing < 0) | (frac_unsuitable_housing > 1)
     )
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_unsuitable_housing": pct_unsuitable_housing,
+        "frac_unsuitable_housing": frac_unsuitable_housing,
     })
 
 def _build_housing_cost_burden_feature(df_wide):
@@ -568,8 +626,8 @@ def _build_housing_cost_burden_feature(df_wide):
     Build housing cost burden feature for owner households.
 
     Computes:
-        pct_housing_poor_owners
-            = % of owner households spending >=30% of income on shelter
+        frac_housing_poor_owners
+            = fraction of owner households spending >=30% of income on shelter
 
     Member ID:
         1673 - % of owner households spending 30%+ on shelter costs
@@ -582,23 +640,23 @@ def _build_housing_cost_burden_feature(df_wide):
     """
 
     MEMBER_IDS = {
-        "housing_cost_burden": 1673
+        "pct_housing_cost_burden": 1673
     }
 
-    pct_housing_poor_owners = pd.to_numeric(
-        df_wide[MEMBER_IDS["housing_cost_burden"]],
+    frac_housing_poor_owners = pd.to_numeric(
+        df_wide[MEMBER_IDS["pct_housing_cost_burden"]],
         errors="coerce"
-    )
+    ) / 100
 
     # Sanity enforcement
-    pct_housing_poor_owners = pct_housing_poor_owners.mask(
-        (pct_housing_poor_owners < 0) |
-        (pct_housing_poor_owners > 100)
+    frac_housing_poor_owners = frac_housing_poor_owners.mask(
+        (frac_housing_poor_owners < 0) |
+        (frac_housing_poor_owners > 1)
     )
 
     return pd.DataFrame({
         "FSA": df_wide["FSA"],
-        "pct_housing_poor_owners": pct_housing_poor_owners,
+        "frac_housing_poor_owners": frac_housing_poor_owners,
     })
 
 
@@ -715,7 +773,7 @@ def _build_socioeconomic_features(df_wide):
 
 
 
-def build_census_feature_matrix(raw_census_df):
+def build_census_fsa_matrix(raw_census_df):
     """
     Takes raw Census Profile dataframe.
     Returns clean FSA-level feature matrix.
@@ -750,5 +808,8 @@ def build_census_feature_matrix(raw_census_df):
 
     # Optional: enforce consistent column order
     features = features.sort_values("FSA").reset_index(drop=True)
+
+    # Rename columns so that they play nicely with other datasets
+    features = features.rename(columns=COLUMN_REMAP)
 
     return features
