@@ -1,2 +1,14 @@
 # Ignore raw data
 data/census/raw/
+
+# Python
+__pycache__/
+*.pyc
+
+# Generated figures
+figures/maps/*.html
+figures/*.png
+figures/*.svg
+
+# Temporary data
+data/tmp/
