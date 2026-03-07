@@ -1,14 +1,20 @@
 # Ignore raw data
-data/census/raw/
+data/raw/census/
+
+# Temporary data
+data/tmp/
 
 # Python
 __pycache__/
 *.pyc
+.ipynb_checkpoints/
 
 # Generated figures
-figures/maps/*.html
-figures/*.png
-figures/*.svg
+figures/
+*.html
 
-# Temporary data
-data/tmp/
+# Temporary/Scratch
+src/scratch/
+notebooks/scratch/
+*_tmp.*
+
