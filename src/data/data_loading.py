@@ -1,0 +1,96 @@
+import pandas as pd
+from config.paths import SPATIAL_CV_DATASET
+
+
+## HAndling the cv_split_data:
+# data is marked by two special columns:
+# 'is_test'  -->> 'True' for test data, 'False' for training pool
+#   and
+# 'cv_fold'  -->> '-1' for test data, zero to N for training pool
+#                 for each cv fold, this marks train/validation split
+# For example, 
+#   Suppose you run fold 2...
+# Then:
+# Test rows (is_test==1): never touched
+# Validation set: cv_fold == 2
+# Training set:   cv_fold != 2
+# So,
+# training    =  df[(~df.is_test) & (df.cv_fold != n_current_fold)]
+# validation  =  df[(~df.is_test) & (df.cv_fold == n_current_fold)]
+
+
+####################
+# HELPER FUNCTIONS
+###################
+
+def _assert_no_test_data(df):
+    """Safety check to ensure no test rows are present."""
+    if df["is_test"].any():
+        raise RuntimeError(
+            "Test rows detected in training data. "
+            "Use the provided loader functions."
+        )
+
+
+def load_full_dataset():
+    """Load dataset with spatial CV splits."""
+    return pd.read_csv(SPATIAL_CV_DATASET)
+
+
+def load_full_training_pool():
+    """Return the full training pool (excluding test set)."""
+
+    df = load_full_dataset()
+
+    # 'is_test' --> 'False' for training pool, and'True' for test data 
+    full_train_pool = df[~df["is_test"]].copy()
+
+    _assert_no_test_data(full_train_pool)
+
+    return full_train_pool
+
+
+def load_test_data():
+    """Return held-out test data."""
+    df = load_full_dataset()
+    
+    # 'is_test' --> 'False' for training pool, and'True' for test data 
+    # load test data and copy so data source can't be changed
+    test_data = df[df["is_test"]].copy()
+
+    return test_data
+
+
+def load_training_data(cv_fold):
+    """Return training data for a given CV fold."""
+    
+    full_train_pool = load_full_training_pool()
+
+    if cv_fold not in full_train_pool["cv_fold"].unique():
+        raise ValueError(f"Invalid cv_fold: {cv_fold}")
+
+    # {train_data} = {training_pool} − {validation_fold}
+    # copy so data source can't be changed
+    train_data = full_train_pool[full_train_pool["cv_fold"] != cv_fold].copy()
+
+
+    # ensure no test data
+    _assert_no_test_data(train_data)
+    
+    return train_data
+
+
+def load_validation_data(cv_fold):
+    """Return validation data for a given CV fold."""
+    
+    full_train_pool = load_full_training_pool()
+    # recall, validation  is: (~df.is_test) & (cv_fold == n_current_fold)
+    if cv_fold not in full_train_pool["cv_fold"].unique():
+        raise ValueError(f"Invalid cv_fold: {cv_fold}")
+
+    # copy so data source can't be changed
+    val_data = full_train_pool[full_train_pool["cv_fold"] == cv_fold].copy()
+    # enssure no test data
+    _assert_no_test_data(val_data)
+
+    return val_data
