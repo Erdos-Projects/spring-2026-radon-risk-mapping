@@ -33,3 +33,26 @@ def no_of_measurements_per_fsa(df):
     df = df.merge(counts, on = 'FSA')
     df = df.rename(columns = {'count':'no_of_measurements'})
     return df[['FSA', 'no_of_measurements']]
+
+
+def drop_nonzero_constant_nonfeature_columns(df):
+    X = df.copy()
+    # Identify non-feature columns
+    non_feature_columns = [
+        "n_days",
+        "concentration",
+        "provinceterritory",
+        "geometry",
+        "spatial_cluster",
+        "is_test",
+        "cv_fold",
+        "radon_danger_conc"
+    ]
+    # Identify all-zero and constant columns
+    all_zero_cols = X.columns[(X == 0).all()]
+    constant_cols = X.columns[X.nunique(dropna=False) == 1].tolist()
+    constant_cols = [col for col in constant_cols if col not in all_zero_cols]
+
+    drop_columns = set(list(non_feature_columns) + list(all_zero_cols) + list(constant_cols))
+    X = X.drop(columns = drop_columns, errors = 'ignore')
+    return X
