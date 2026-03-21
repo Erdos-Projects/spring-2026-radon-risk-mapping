@@ -1,0 +1,2 @@
+run_id,run_timestamp,search_scoring,n_random_search_iterations,n_inner_splits,classification_threshold,n_calibration_bins,oof_roc_auc,oof_aucpr,oof_logloss,oof_brier,oof_ece,oof_accuracy,oof_recall,oof_f1,prevalence,n_train_rows
+xgboost_overnight_2026_03_20_neg_log_loss_20260320_035024,20260320_035024,neg_log_loss,100,3,0.1,10,0.6480990163501115,0.18163856639797485,0.32991428826616626,0.09406610561760834,0.006074127803299596,0.5401013287448618,0.6619718309859155,0.2381631037212985,0.10859382468215276,10461

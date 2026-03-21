@@ -19,7 +19,7 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 FINAL_DATASET_DIR = DATA_DIR / "final_dataset"
 FIGURES_DIR = PROJECT_ROOT / "figures"
 MAPS_DIR = FIGURES_DIR / "maps"
-
+RESULTS_DIR = PROJECT_ROOT / "results"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 
 SRC_DIR = PROJECT_ROOT / "src"
@@ -80,6 +80,13 @@ SPATIAL_CV_DIR = MODEL_DATA_DIR / "spatial_cv"
 
 # Files
 SPATIAL_CV_DATASET = SPATIAL_CV_DIR / "dataset_with_spatial_cv_splits.csv"
+
+
+#---------------------------------------------------
+#  Results
+#---------------------------------------------------
+
+MODEL_RUNS_DIR = RESULTS_DIR / "model_runs"
 
 
 # --------------------------------------------------
