@@ -30,21 +30,21 @@ We framed this project as a binary classification task to predict whether a Forw
 ### Evaluation metrics
 Because our goal was to estimate meaningful radon risk probabilities rather than only rank high-risk FSAs, we evaluated models using both calibration and ranking metrics.
 
-For calibration, we used log loss, Brier score, and ECE.
-For ranking, we used AUC-PR due to the imbalance of the target in the dataset.
+For calibration, we used direct observation of the calibration plots, Brier score, and ECE.
+For ranking, we used PR plots and AUC-PR due to the imbalance of the target in the dataset.
 
 ### Results
-1. Cross-validation model comparison showed that all three models captured some predictive signal, with no model far-exceeding the others across all metrics. XGBoost and Random Forest achieved marginally stronger ranking performance compared to the Logicstic Regression model. When examining calibration, the Random Forest provided slightly better-calibrated probabilities than the other two models. Random Forest was selected as the final model  because it was reasonably balanced between ranking and calibration and because it barely outscored the other models (in particular with respect to calibration)
+1. Cross-validation model comparison showed that all three models captured some predictive signal, with no model far-exceeding the others across all metrics. XGBoost and Random Forest achieved marginally stronger ranking performance compared to the Logicstic Regression model. When examining calibration, the Random Forest provided slightly better-calibrated probabilities than the other two models. Random Forest was selected as the final model  because it was reasonably balanced between ranking and calibration and because it barely outscored the other models (in particular with respect to calibration).
 ![alt text](figures/precision_recall_curve.png)
 
-2. On the held-out test set, the final Random Forest achieved ROC-AUC = 0.649, AUC-PR = 0.184, log loss = 0.329, Brier score = 0.094, and ECE = 0.001. Compared with the out-of-fold results, ranking performance remained similar or slightly improved, while calibration degraded modestly. Overall, this suggests that the model generalizes reasonably well, although the task remains challenging.
+2. The final hyperparameter-tuned Random Forest model held up well on the test set. Compared with the out-of-fold validation results, ranking performance remained similar or slightly improved, while calibration degraded modestly. Overall, the performance is modest but, while the model generalizes reasonably well, the task remains challenging.
 ![alt text](figures/calibration_plot.png)
 
 3. Model interpretation based on permutation importance indicated that the most influential predictors included geologic province, uranium-related variables, longitude, rock type indicators, and several housing and socioeconomic features. This pattern suggests that the model captures both geologic structure and broader regional context.
 
 
 ### Conclusions
-This project shows that radon risk is predictable to some extent at the FSA level using publicly available contextual data. The final model captures a meaningful combination of geologic, climatic, housing, and socioeconomic structure, but the problem remains difficult and the resulting probabilities should be interpreted as screening-oriented risk estimates rather than precise predictions. In this sense, the project is best viewed as a decision-support framework for identifying areas that may warrant greater public-health attention, rather than a substitute for direct household radon testing.
+This project shows that radon risk is predictable at the FSA level using publicly available data. The final model delivers a meaningful representation of radon risk at the FSA level using a sensible combination of geologic, climatic, housing, and socioeconomic structure. The project is best viewed as a decision-support framework for identifying areas that may warrant greater public-health attention, rather than a substitute for direct household radon testing.
 
 
 ### Future plans
@@ -55,8 +55,6 @@ This project shows that radon risk is predictable to some extent at the FSA leve
 - Incorporate additional predictors related to housing characteristics, radon knowledge, and mitigation infrastructure
 
 - Improve the target construction and feature space as newer census or environmental data become available
-
-- Investigate whether finer-resolution spatial data can improve discrimination and calibration
 
 
 ### Repo structure
