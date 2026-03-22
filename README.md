@@ -39,10 +39,10 @@ Since the target is imbalanced, AUC-PR was especially important for ranking perf
 
 ### Results
 1. Cross-validation model comparison showed that all three models captured some predictive signal, but their strengths differed. XGBoost achieved the strongest ranking performance, while Random Forest provided better-calibrated probabilities. Because our primary goal was meaningful risk estimation rather than ranking alone, Random Forest was selected as the final model.
-![alt text](image.png)
+![alt text](figures/precision_recall_curve.png)
 
 2. On the held-out test set, the final Random Forest achieved ROC-AUC = 0.649, AUC-PR = 0.184, log loss = 0.329, Brier score = 0.094, and ECE = 0.001. Compared with the out-of-fold results, ranking performance remained similar or slightly improved, while calibration degraded modestly. Overall, this suggests that the model generalizes reasonably well, although the task remains challenging.
-![alt text](image-1.png)
+![alt text](figures/calibration_plot.png)
 
 3. Model interpretation based on permutation importance indicated that the most influential predictors included geologic province, uranium-related variables, longitude, rock type indicators, and several housing and socioeconomic features. This pattern suggests that the model captures both geologic structure and broader regional context.
 
