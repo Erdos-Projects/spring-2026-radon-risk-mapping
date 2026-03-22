@@ -10,7 +10,9 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Generated figures
-figures/
+figures/*
+!figures/precision_recall_curve.png
+!figures/calibration_plot.png
 *.html
 
 # Temporary/Scratch
