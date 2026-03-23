@@ -25,27 +25,28 @@ The primary stakeholders for this project include public health agencies, policy
 4. Our predictive features include census-derived housing, demographic, and socioeconomic indicators, geological province and rock-type variables, surficial sedimentary types, uranium concentration, and heating degree day data. These datasets were spatially aligned, cleaned, and merged into a unified FSA-level modeling table, which was used to predict whether an FSA exceeded the radon-risk threshold.
 
 ### Modeling approach
-We framed this project as a binary classification task to predict whether a Forward Sortation Area (FSA) exceeds a radon-risk threshold derived from aggregated household radon labels. We compared three models: Logistic Regression as an interpretable baseline, Random Forest as a flexible ensemble method, and XGBoost as a higher-capacity gradient-boosted model. Because the project is inherently spatial, we used a held-out test set together with nested cross-validation for model selection and hyperparameter tuning, while designing the validation splits to reduce spatial leakage. Since our goal was to produce meaningful risk estimates for public-health interpretation, we treated predicted probability as the main output. As a result, calibration was prioritized over ranking alone, although ranking performance remained an important secondary consideration.
+We framed this project as a binary classification task to predict whether an FSA exceeds a radon-risk threshold derived from household radon measurements aggregated at the FSA level. We compared three models: Logistic Regression as an interpretable baseline, Random Forest as a flexible ensemble method, and XGBoost as a higher-capacity gradient-boosted model. Because the project is inherently spatial, we used a held-out test set together with nested cross-validation for model selection and hyperparameter tuning, while designing the validation splits to reduce spatial leakage. Since our goal was to produce meaningful risk estimates for public-health interpretation, we treated predicted probability as the main output. As a result, calibration was prioritized over ranking alone, although ranking performance remained an important secondary consideration.
 
 ### Evaluation metrics
-Because our goal was to estimate meaningful radon risk probabilities rather than only rank high-risk FSAs, we evaluated models using both calibration and ranking metrics.
+Because our goal was to estimate meaningful radon-risk probabilities rather than only rank high-risk FSAs, we evaluated models using both calibration and ranking metrics.
 
-For calibration, we used direct observation of the calibration plots, Brier score, and ECE.
-For ranking, we used PR plots and AUC-PR due to the imbalance of the target in the dataset.
+Primary calibration metrics included log loss, Brier score, and Expected Calibration Error (ECE), while secondary ranking metrics included AUC-PR and ROC-AUC.
+
+Because the target is imbalanced, AUC-PR was especially important for ranking performance, while calibration metrics were prioritized because predicted probability was treated as the main output.
 
 ### Results
-1. Cross-validation model comparison showed that all three models captured some predictive signal, with no model far-exceeding the others across all metrics. XGBoost and Random Forest achieved marginally stronger ranking performance compared to the Logicstic Regression model. When examining calibration, the Random Forest provided slightly better-calibrated probabilities than the other two models. Random Forest was selected as the final model  because it was reasonably balanced between ranking and calibration and because it barely outscored the other models (in particular with respect to calibration).
+1. Cross-validation model comparison showed that all three models captured some predictive signal, but their strengths differed. Although XGBoost achieved stronger ranking performance, Random Forest provided the best overall balance between calibration and ranking and was therefore selected as the final model.
 ![alt text](figures/precision_recall_curve.png)
 
-2. The final hyperparameter-tuned Random Forest model held up well on the test set. Compared with the out-of-fold validation results, ranking performance remained similar or slightly improved, while calibration degraded modestly. Overall, the performance is modest but, while the model generalizes reasonably well, the task remains challenging.
+2. On the held-out test set, the final Random Forest model held up well relative to the cross-validated results. Ranking performance was preserved or slightly improved, while calibration was modestly weaker than the out-of-fold estimate. Overall, this suggests that the model generalizes reasonably well to unseen data and produces meaningful health-risk probabilities, even though the prediction task remains challenging.
 ![alt text](figures/calibration_plot.png)
 
-3. Model interpretation based on permutation importance indicated that the most influential predictors included geologic province, uranium-related variables, longitude, rock type indicators, and several housing and socioeconomic features. This pattern suggests that the model captures both geologic structure and broader regional context.
-
+3. Model interpretation using permutation importance showed that the most influential predictors were drawn from a mix of feature categories, including geologic structure, geographic context, and housing- and socioeconomic-related variables. This pattern suggests that the model captures both underlying geology and broader regional living conditions.
+![alt text](figures/permutation_importance.png)
 
 ### Conclusions
-This project shows that radon risk is predictable at the FSA level using publicly available data. The final model delivers a meaningful representation of radon risk at the FSA level using a sensible combination of geologic, climatic, housing, and socioeconomic structure. The project is best viewed as a decision-support framework for identifying areas that may warrant greater public-health attention, rather than a substitute for direct household radon testing.
 
+This project shows that radon risk can be estimated to a useful extent at the FSA level using publicly available contextual data. The final Random Forest model generates meaningful health-risk probabilities, although the prediction task remains challenging and the resulting estimates should be interpreted as screening-oriented rather than precise predictions. In this sense, the project is best viewed as a decision-support framework for identifying areas that may warrant greater public-health attention, rather than a substitute for direct household radon testing.
 
 ### Future plans
 - Test explicitly spatial and hierarchical models that better reflect the geographic structure of radon risk

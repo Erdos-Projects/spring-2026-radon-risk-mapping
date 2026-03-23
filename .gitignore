@@ -13,6 +13,7 @@ __pycache__/
 figures/*
 !figures/precision_recall_curve.png
 !figures/calibration_plot.png
+!figures/permutation_importance.png
 *.html
 
 # Temporary/Scratch
