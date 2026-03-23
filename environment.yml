@@ -1,0 +1,28 @@
+name: erdos_ds_environment
+channels:
+  - defaults
+dependencies:
+  - freetype=2.13.3
+  - interpret
+  - jupyter
+  - matplotlib[version='>=3.8']
+  - missingno
+  - openpyxl[version='>=3.0']
+  - pandas[version='>=2.0']
+  - pandera
+  - pip[version='>=24.0']
+  - pmdarima[version='>=2.0']
+  - py-xgboost
+  - pyarrow
+  - pygam
+  - python=3.12
+  - scikit-learn[version='>=1.4']
+  - sqlalchemy
+  - xgboost=2.1.4
+  - geopandas
+  - rasterio
+  - umap-learn
+  - alphashape
+  - ydata-profiling
+  - matplotlib-scalebar
+prefix: C:\Users\john\anaconda3\envs\erdos_ds_environment
