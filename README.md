@@ -59,3 +59,12 @@ This project shows that radon risk can be estimated to a useful extent at the FS
 
 
 ### Repo structure
+
+- `config/`: configuration files  
+- `data/`: datasets used for analysis and modeling  
+- `docs/`: project notes and documentation  
+- `figures/`: figures used in the README file 
+- `notebooks/`: main project notebooks, including data processing, EDA, cross-validation, and modeling  
+- `results/model_runs/`: saved model outputs, metrics, and plots  
+- `src/`: helper functions used by the notebooks  
+- `environment.yml`: environment setup  
