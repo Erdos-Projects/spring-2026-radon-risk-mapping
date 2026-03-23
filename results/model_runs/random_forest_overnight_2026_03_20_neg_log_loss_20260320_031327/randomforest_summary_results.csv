@@ -1,0 +1,2 @@
+run_id,run_timestamp,search_scoring,n_random_search_iterations,n_inner_splits,classification_threshold,n_calibration_bins,oof_roc_auc,oof_aucpr,oof_logloss,oof_brier,oof_ece,oof_accuracy,oof_recall,oof_f1,prevalence,n_train_rows
+random_forest_overnight_2026_03_20_neg_log_loss_20260320_031327,20260320_031327,neg_log_loss,100,3,0.1,10,0.6494776365970623,0.18360024619263074,0.3294233152907154,0.09391382373547315,0.0012777236385314466,0.5598891119395851,0.6690140845070423,0.248203788373612,0.10859382468215276,10461

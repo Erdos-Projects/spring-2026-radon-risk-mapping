@@ -1,0 +1,9 @@
+{
+  "classifier__bootstrap": true,
+  "classifier__class_weight": null,
+  "classifier__max_depth": 8,
+  "classifier__max_features": "sqrt",
+  "classifier__min_samples_leaf": 17,
+  "classifier__min_samples_split": 15,
+  "classifier__n_estimators": 311
+}

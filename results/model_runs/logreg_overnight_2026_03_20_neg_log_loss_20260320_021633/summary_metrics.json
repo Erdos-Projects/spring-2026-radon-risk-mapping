@@ -1,0 +1,21 @@
+{
+  "model_name": "logreg",
+  "run_id": "logreg_overnight_2026_03_20_neg_log_loss_20260320_021633",
+  "batch_tag": "overnight_2026_03_20",
+  "search_scoring": "neg_log_loss",
+  "n_rows": 10461,
+  "positive_rate": 0.10859382468215276,
+  "n_outer_folds": 5,
+  "oof_roc_auc": 0.628664095835064,
+  "oof_aucpr": 0.17110791288787475,
+  "oof_log_loss": 0.333743797168881,
+  "oof_brier": 0.09476740943794444,
+  "oof_ece": 0.0054689802214567314,
+  "oof_f1": 0.23486292332502565,
+  "oof_recall": 0.7051056338028169,
+  "mean_fold_roc_auc": 0.6356320055098158,
+  "mean_fold_aucpr": 0.17985904882150788,
+  "mean_fold_log_loss": 0.33377451201005887,
+  "mean_fold_brier": 0.09477670834214767,
+  "mean_fold_ece": 0.026603013418044143
+}

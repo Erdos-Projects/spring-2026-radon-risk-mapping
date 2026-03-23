@@ -19,7 +19,7 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 FINAL_DATASET_DIR = DATA_DIR / "final_dataset"
 FIGURES_DIR = PROJECT_ROOT / "figures"
 MAPS_DIR = FIGURES_DIR / "maps"
-
+RESULTS_DIR = PROJECT_ROOT / "results"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 
 SRC_DIR = PROJECT_ROOT / "src"
@@ -38,15 +38,14 @@ FSA_BOUNDARY_SHAPEFILE = RAW_DATA_DIR / "fsa_boundary" / "gfsa000a11a_e.shp"
 
 URANIUM_RASTER = RAW_DATA_DIR / "uranium" / "Canada - 250m - RAD - Equivalent Uranium eU - 2025_Aug.ERS"
 
-
 # Files
 CENSUS_RAW_FILENAME = "98-401-X2016046_English_CSV_data.csv"
 CENSUS_RAW = CENSUS_RAW_DIR / CENSUS_RAW_FILENAME
-# census data is stored locally b/c of size limits. 
-# gitignore hides this from the repo
-# download & unzip contents (census data files) to:    RAW_DATA_DIR / "census_canada_2016"
-# final intended filepath is: RAW_DATA_DIR / "census_canada_2016" / "98-401-X2016046_eng_CSV" / "98-401-X2016046_English_CSV_data.csv"
-# ie CENSUS_RAW_DIR / CENSUS_RAW_FILENAME
+# # census data is stored locally b/c of size limits. 
+# # gitignore hides this from the repo
+# # download & unzip contents (census data files) to:    RAW_DATA_DIR / "census_canada_2016"
+# # final intended filepath is: RAW_DATA_DIR / "census_canada_2016" / "98-401-X2016046_eng_CSV" / "98-401-X2016046_English_CSV_data.csv"
+# #  ie CENSUS_RAW_DIR / CENSUS_RAW_FILENAME
 
 # --------------------------------------------------
 # Processed datasets
@@ -70,6 +69,8 @@ HEATING_DAYS = PROCESSED_DATA_DIR / "average_heating_days_cleaned.csv"
 
 # --------------------------------------------------
 # Modeling datasets
+#   !!!  ACCESS WITH HELPER FUNCTIONS  !!!
+#   !!!  (see: src/data/data_loading ) !!!
 # --------------------------------------------------
 
 # Directories
@@ -79,6 +80,13 @@ SPATIAL_CV_DIR = MODEL_DATA_DIR / "spatial_cv"
 
 # Files
 SPATIAL_CV_DATASET = SPATIAL_CV_DIR / "dataset_with_spatial_cv_splits.csv"
+
+
+#---------------------------------------------------
+#  Results
+#---------------------------------------------------
+
+MODEL_RUNS_DIR = RESULTS_DIR / "model_runs"
 
 
 # --------------------------------------------------
