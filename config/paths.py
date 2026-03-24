@@ -53,17 +53,11 @@ CENSUS_RAW = CENSUS_RAW_DIR / CENSUS_RAW_FILENAME
 
 # Files
 RADON_CLEANED = PROCESSED_DATA_DIR / "radon-concentration-cleaned.csv"
-
 CENSUS_FSA = PROCESSED_DATA_DIR / "fsa_census.csv"
-
 FSA_CENTROIDS = PROCESSED_DATA_DIR / "fsa_centroids.csv"
-
 URANIUM_FSA = PROCESSED_DATA_DIR / "fsa_uranium.csv"
-
 GEOLOGY_FSA = PROCESSED_DATA_DIR / "geology_fsa_radon.csv"
-
 SURFICIAL_FSA = PROCESSED_DATA_DIR / "surficial_fsa_radon.csv"
-
 HEATING_DAYS = PROCESSED_DATA_DIR / "average_heating_days_cleaned.csv"
 
 
