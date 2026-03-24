@@ -8,13 +8,13 @@ Team project: spring-2026-radon-risk-mapping
 4. Emmanuel Asante
 
 ### Project overview
-This project predicts residential radon risk across Canada using geological, housing infrastructural, socioeconomic, and demographic features aggregated at the Forward Sortation Area (FSA) level with the broader goal of providing calibrated risk metrics for public-health decision-making.
+This project predicts residential radon risk across Canada using geological, housing infrastructural, socioeconomic, and demographic features aggregated at the Forward Sortation Area (FSA) level to generate calibrated risk metrics for public-health decision-making.
 
 ### Motivation and problem statement
 Radon is a naturally occurring radioactive gas and one of the leading causes of lung cancer among non-smokers. Because radon risk is influenced by both geological and built-environment factors, it is important to identify areas with high risk and understand the main contributing features.
 
 In this project, we ask the following question:
-"Can we predict whether an FSA exceeds a radon-risk threshold?"
+"Can we estimate the probability that a household exceeds a radon threshold using contextual FSA-level data?"
 
 ### Stakeholders
 The primary stakeholders for this project include public health agencies, policymakers, and local communities in Canada, who may use this analysis to help prioritize radon testing, mitigation efforts, and risk communication. More broadly, this modeling framework may also be useful to researchers and public health organizations in other countries or regions facing similar radon exposure challenges, particularly where monitoring coverage is limited.
@@ -22,7 +22,7 @@ The primary stakeholders for this project include public health agencies, policy
 ### Dataset
 1. Our primary radon data came from the Cross-Canada Survey of Radon Concentrations in Homes, a survey of long-term measurements of radon concentrations in volunteer homes from 2009 – 2011. In this study, data was collected at the household level across Canada. However, for privacy purposes, the Canadian government represents the location of each measurement at the Forward Sortation Area (FSA) scale, with multiple household-level observations available within many FSAs. For each household, we defined a binary indicator of elevated radon risk, based on the threshold for 'action' recommended by Health Canada:  radon concentration greater than 200 Bq/m$^3$ was assigned a value of 1 and 0 otherwise. 
 
-4. Our predictive features include census-derived housing, demographic, and socioeconomic indicators, geological province and rock-type variables, surficial sedimentary types, uranium concentration, and heating degree day data. These datasets were spatially aligned, cleaned, and merged into a unified FSA-level modeling table, which was used to predict whether an FSA exceeded the radon-risk threshold.
+2. Our predictive features include census-derived housing, demographic, and socioeconomic indicators, geological province and rock-type variables, surficial sedimentary types, uranium concentration, and heating degree day data. These datasets were spatially aligned, cleaned, and merged into a unified FSA-level modeling table, which was used to predict whether an FSA exceeded the radon-risk threshold.
 
 ### Modeling approach
 We framed this project as a binary classification task to predict whether an FSA exceeds a radon-risk threshold derived from household radon measurements aggregated at the FSA level. We compared three models: Logistic Regression as an interpretable baseline, Random Forest as a flexible ensemble method, and XGBoost as a higher-capacity gradient-boosted model. Because the project is inherently spatial, we used a held-out test set together with nested cross-validation for model selection and hyperparameter tuning, while designing the validation splits to reduce spatial leakage. Since our goal was to produce meaningful risk estimates for public-health interpretation, we treated predicted probability as the main output. As a result, calibration was prioritized over ranking alone, although ranking performance remained an important secondary consideration.
@@ -33,6 +33,27 @@ Because our goal was to estimate meaningful radon-risk probabilities rather than
 Primary calibration metrics included log loss, Brier score, and Expected Calibration Error (ECE), while secondary ranking metrics included AUC-PR and ROC-AUC.
 
 Because the target is imbalanced, AUC-PR was especially important for ranking performance, while calibration metrics were prioritized because predicted probability was treated as the main output.
+
+
+---
+
+## Project pipeline
+
+- Raw data (data/raw/)
+- Feature processing notebooks (notebooks/raw_data_processing/)
+- Merged dataset (data/final_dataset/main_dataset.csv)
+- Spatial split annotation (notebooks/data_splitting/)
+- Training-ready dataset (data/modeling/dataset_with_spatial_cv_splits.csv)
+- Model training + CV (notebooks/modeling/)
+- Saved outputs (results/model_runs/)
+- Final evaluation + figures (figures/
+
+### Source of truth
+- **data/final_dataset/main_dataset.csv**:  canonical assembled dataset  
+- **data/modeling/dataset_with_spatial_cv_splits.csv)**:  training-ready dataset with CV folds and test split  
+- **config/**:  authoritative configurations  
+
+---
 
 ### Results
 1. Cross-validation model comparison showed that all three models captured some predictive signal, but their strengths differed. Although XGBoost achieved stronger ranking performance, Random Forest provided the best overall balance between calibration and ranking and was therefore selected as the final model.
@@ -50,15 +71,13 @@ This project shows that radon risk can be estimated to a useful extent at the FS
 
 ### Future plans
 - Test explicitly spatial and hierarchical models that better reflect the geographic structure of radon risk
-
+- Evaluate role of radon concentration threshold. EDA suggested non-trivial radon concentration distributions 
 - Explore post-training calibration methods, especially for higher-capacity models such as XGBoost
+- Incorporate additional predictors related to housing characteristics, community radon awareness/knowledge, and mitigation infrastructure
 
-- Incorporate additional predictors related to housing characteristics, radon knowledge, and mitigation infrastructure
+---
 
-- Improve the target construction and feature space as newer census or environmental data become available
-
-
-### Repo structure
+## Repo structure
 
 - `config/`: configuration files  
 - `data/`: datasets used for analysis and modeling  
@@ -68,3 +87,15 @@ This project shows that radon risk can be estimated to a useful extent at the FS
 - `results/model_runs/`: saved model outputs, metrics, and plots  
 - `src/`: helper functions used by the notebooks  
 - `environment.yml`: environment setup  
+
+## How to run
+
+conda env create -f environment.yml  
+conda activate erdos_ds_environment  
+
+Run notebooks in:
+- notebooks/raw_data_processing/
+- notebooks/data_splitting/
+- notebooks/modeling/
+
+---
