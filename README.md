@@ -39,6 +39,7 @@ Because the target is imbalanced, AUC-PR was especially important for ranking pe
 ---
 
 ## Project pipeline
+The pipeline is executed sequentially through the notebooks listed in the "How to run" section below.
 
 - Raw data (data/raw/)
 - Feature processing notebooks (notebooks/raw_data_processing/)
@@ -47,11 +48,11 @@ Because the target is imbalanced, AUC-PR was especially important for ranking pe
 - Training-ready dataset (data/modeling/dataset_with_spatial_cv_splits.csv)
 - Model training + CV (notebooks/modeling/)
 - Saved outputs (results/model_runs/)
-- Final evaluation + figures (figures/
+- Final evaluation + figures (figures/)
 
 ### Source of truth
 - **data/final_dataset/main_dataset.csv**:  canonical assembled dataset  
-- **data/modeling/dataset_with_spatial_cv_splits.csv)**:  training-ready dataset with CV folds and test split  
+- **data/modeling/dataset_with_spatial_cv_splits.csv**:  training-ready dataset with CV folds and test split  
 - **config/**:  authoritative configurations  
 
 ### Repo structure
@@ -67,13 +68,43 @@ Because the target is imbalanced, AUC-PR was especially important for ranking pe
 
 ## How to run
 
+### Environment setup
 conda env create -f environment.yml  
 conda activate erdos_ds_environment  
 
-Run notebooks in:
-- notebooks/raw_data_processing/
-- notebooks/data_splitting/
-- notebooks/modeling/
+### Pipeline:
+
+**Note: This is canonical order; each step can be run independently using input files already available in repo:**
+
+1. Build canonical dataset  
+   notebooks/raw_data_processing/main_dataset_processing.ipynb  
+   outputs: data/final_dataset/main_dataset.csv
+
+2. Create spatial splits  
+   notebooks/data_splitting/spatial_cv_splits.ipynb  
+   adds: spatial_cluster, cv_fold, is_test
+
+3. Run nested CV model training  
+   Windows: notebooks/modeling/run_all_models_overnight.bat  
+   or run individually:  
+   - notebooks/modeling/log_regression_pipeline_tmp.ipynb  
+   - notebooks/modeling/random_forest_pipeline_updated.ipynb  
+   - notebooks/modeling/xgboost_pipeline_updated.ipynb
+
+4. Compare CV results  
+   notebooks/modeling/compare_cvfold_training_model_results.ipynb
+
+5. Train final model + evaluate on test set  
+   notebooks/modeling/final_random_forest_refit_test_importance.ipynb
+
+6. Generate final plots  
+   notebooks/modeling/plot_Slide6_finalModel.ipynb
+
+This produces:
+- precision-recall curves
+- calibration plots
+- summary performance tables
+
 
 ---
 
