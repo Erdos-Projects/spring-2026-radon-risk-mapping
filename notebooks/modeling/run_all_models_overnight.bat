@@ -1,13 +1,13 @@
 @echo off
-cd /d C:\Users\john\Desktop\spring-2026-radon-risk-mapping\notebooks\scratch
+cd /d C:\Users\john\Desktop\spring-2026-radon-risk-mapping\notebooks\modeling
 
-jupyter nbconvert --to notebook --execute log_regression_pipeline_tmp.ipynb --inplace --ExecutePreprocessor.timeout=-1
+jupyter nbconvert --to notebook --execute log_regression_pipeline.ipynb --inplace --ExecutePreprocessor.timeout=-1
 if errorlevel 1 goto :fail
 
-jupyter nbconvert --to notebook --execute random_forest_pipeline_updated.ipynb --inplace --ExecutePreprocessor.timeout=-1
+jupyter nbconvert --to notebook --execute random_forest_pipeline.ipynb --inplace --ExecutePreprocessor.timeout=-1
 if errorlevel 1 goto :fail
 
-jupyter nbconvert --to notebook --execute xgboost_pipeline_updated.ipynb --inplace --ExecutePreprocessor.timeout=-1
+jupyter nbconvert --to notebook --execute xgboost_pipeline.ipynb --inplace --ExecutePreprocessor.timeout=-1
 if errorlevel 1 goto :fail
 
 echo.
